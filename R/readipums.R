@@ -1,11 +1,33 @@
 library(stringr)
+library(readstata13)
 
-read.pums <- function(datafile, dtype=NA, lowercase.colnames=TRUE, codebook=NA, include.columns=NA, exclude.columns=NA) {
+read.ipums <- function(datafile, dtype=NA, lowercase.colnames=TRUE, codebook=NA, include.columns=NA, exclude.columns=NA) {
   raw_df <- load.datafile(datafile, include.columns, exclude.columns, dtype)
 }
 
 # PRIVATE FUNCTIONS
-load.datafile <- function(filepath, include.columns=NA, exclude.columns=NA, dtype=NA) {
+load.datafile <- function(filepath, dtype=NA) {
+  # TODO: what if filepath too short?
+
+  if(is.na(dtype)) {
+    if (nchar(filepath) < 4){
+      return(NA)
+    }
+    end <- substr(filepath, nchar(filepath)-3+1, nchar(filepath))
+    if(tolower(end) == "csv") {
+      dtype <- "csv"
+    } else if(tolower(end) == "dta") {
+      dtype <- "dta"
+    } else {
+      # TODO: invalid filetype?
+    }
+  }
+
+  if(dtype == "csv") {
+    return(read.csv(filepath))
+  } else if(dtype == "dta") {
+    return(read.dta13(file = "census.dta"))
+  }
 
 }
 
