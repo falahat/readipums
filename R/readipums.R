@@ -1,5 +1,6 @@
 library(stringr)
 library(readstata13)
+library(foreach)
 
 read.ipums <- function(datafile, dtype=NA, lowercase.colnames=TRUE, codebook=NA, include.columns=NA, exclude.columns=NA) {
   raw_df <- load.datafile(datafile, include.columns, exclude.columns, dtype)
@@ -76,7 +77,11 @@ load.codebook <- function(filepath, lowercase.colnames=TRUE) {
     } else if (mode == "reading") {
       var.groups <- get.vars(curr.line)
       if (length(var.groups) > 2) {
+
         key <- var.groups[[2]]
+        if(suppressWarnings(!is.na(as.integer(key)))){
+          key <- toString(as.integer(key))
+        }
         val <- var.groups[[3]]
         ans[[curr.var]][key] <- val
       }
@@ -88,12 +93,28 @@ load.codebook <- function(filepath, lowercase.colnames=TRUE) {
 
 codebook.decode <- function(codebook, colname, key) {
   variable.dict <- codebook[[colname]]
-  if(is.na(variable.dict)){
-    return(NA)
+  ans <- variable.dict[[toString(key)]]
+  if(is.null(ans)){
+    return(key)
   }
-  return(variable.dict[[key]])
+  return(ans)
 }
 
 codebook.decodedf <- function(ipumsdf, codebook) {
+  to.convert <- names(codebook)
 
+  convert <- function(row, colname) {
+    curr.val <- row[[colname]]
+    new.val <- codebook.decode(codebook, colname, curr.val)
+    return(new.val)
+  }
+
+  for(colname in to.convert){
+
+    converted.column <- apply(ipumsdf, 1, convert, colname=colname)
+    ipumsdf[colname] <- converted.column
+  }
+
+
+  return(ipumsdf)
 }

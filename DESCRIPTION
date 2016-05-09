@@ -3,10 +3,11 @@ Type: Package
 Title: Reading IPUMS Data and Codebooks
 Version: 0.1
 Date: 2016-05-08
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-Depends: stringr, testthat, readstata13
-License: What license is it under?
+Author: Aryan Falahatpisheh
+Maintainer: Who to complain to <aryan.falahatpisheh@berkeley.edu>
+Description: This package loads IPUMS datasets (CSV or STATA.) It loads the IPUMS codebook for each data extract and map all of the correct IPUMS data labels to the correct human-understandable value (e.g. 1 => "Employed" for EMPLOYSTAT or 304 => "Cherokee" for RACED.)
+Imports: stringr, testthat, readstata13, foreach
+Depends: stringr, testthat, readstata13, foreach
+License: GPL
 LazyData: TRUE
 Suggests: testthat
