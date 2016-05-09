@@ -1,10 +1,12 @@
 Package: readipums
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Reading IPUMS Data and Codebooks
 Version: 0.1
 Date: 2016-05-08
 Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
 Description: More about what it does (maybe more than one line)
+Depends: stringr, testthat
 License: What license is it under?
 LazyData: TRUE
+Suggests: testthat
